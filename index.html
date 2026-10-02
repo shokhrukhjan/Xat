@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sizga xat keldi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky-top: #140A2C;
+    --sky-mid: #2B1247;
+    --sky-low: #5E1D4C;
+    --gold: #F3CD82;
+    --rose: #F58FB0;
+    --ivory: #FFF3E2;
+    --paper: #FFF6E8;
+    --paper-deep: #F9E3C3;
+    --ink: #2B1238;
+    --wine: #6B1F4B;
+    --script: "Great Vibes", "Snell Roundhand", "Apple Chancery", cursive;
+    --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, "Times New Roman", serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --sky-top: #0F0724;
+      --sky-mid: #260F40;
+      --sky-low: #561A46;
+    }
+  }
+  :root[data-theme="dark"] {
+    --sky-top: #0F0724;
+    --sky-mid: #260F40;
+    --sky-low: #561A46;
+  }
+
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-behavior: smooth; scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--sky-top);
+    color: var(--ivory);
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.45;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.locked { overflow: hidden; }
+
+  /* ---------- fixed scene layers ---------- */
+  .sky, #stars, #fx, .balloons {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .sky {
+    z-index: 0;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 58%, var(--sky-low) 100%);
+  }
+  #stars { z-index: 0; }
+  #fx { z-index: 2; }
+  .balloons { z-index: 3; overflow: hidden; }
+
+  .balloon {
+    position: absolute;
+    bottom: -220px;
+    animation: rise linear forwards;
+    will-change: transform;
+  }
+  .balloon svg {
+    display: block;
+    animation: sway 3.4s ease-in-out infinite alternate;
+    transform-origin: 50% 0;
+  }
+  @keyframes rise { to { transform: translateY(calc(-100vh - 460px)); } }
+  @keyframes sway {
+    from { transform: translateX(-12px) rotate(-4deg); }
+    to   { transform: translateX(12px) rotate(4deg); }
+  }
+
+  /* ---------- cover ---------- */
+  .cover {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 58%, var(--sky-low) 100%);
+    transition: opacity 1s ease, visibility 0s linear 1s;
+  }
+  .cover.gone { opacity: 0; visibility: hidden; }
+  .cover-title {
+    font-family: var(--script);
+    font-weight: 400;
+    font-size: clamp(2.8rem, 13vw, 4.5rem);
+    line-height: 1.1;
+    color: var(--gold);
+    margin: 0 0 1.75rem;
+  }
+  .open-btn {
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    border-radius: 18px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .open-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 10px; }
+  .envelope {
+    display: block;
+    width: min(74vw, 300px);
+    height: auto;
+    margin: 0 auto;
+    filter: drop-shadow(0 18px 30px rgba(8, 3, 20, .55));
+    transition: transform .9s cubic-bezier(.2, .7, .2, 1), opacity .9s ease;
+  }
+  .envelope .seal { transform-origin: 140px 104px; animation: pulse 2.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { transform: scale(1.08); } }
+  .open-label {
+    display: block;
+    margin-top: 1.5rem;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--ivory);
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-underline-offset: .3em;
+  }
+  .cover-hint {
+    margin: 1rem 0 0;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(255, 243, 226, .7);
+  }
+  .cover.gone .envelope { transform: translateY(-40px) scale(1.12); opacity: 0; }
+
+  /* ---------- greeting ---------- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 5rem 1.5rem 6.5rem;
+    text-align: center;
+  }
+  .hero-inner { max-width: 30rem; }
+  .salute {
+    font-family: var(--script);
+    font-weight: 400;
+    font-size: clamp(4rem, 19vw, 7rem);
+    line-height: 1;
+    margin: 0 0 1.5rem;
+    color: var(--gold);
+    text-shadow: 0 0 28px rgba(243, 205, 130, .35), 0 2px 14px rgba(15, 7, 36, .8);
+  }
+  .hero p {
+    margin: 0 auto 1.1rem;
+    max-width: 24ch;
+    font-size: clamp(1.4rem, 5.6vw, 1.9rem);
+    line-height: 1.38;
+    text-shadow: 0 2px 16px rgba(15, 7, 36, .9);
+  }
+  .hero .sign {
+    margin-top: 2rem;
+    font-style: italic;
+    font-size: clamp(1.15rem, 4.6vw, 1.4rem);
+    color: rgba(255, 243, 226, .82);
+    max-width: none;
+  }
+  .hero [data-r] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 1.4s ease, transform 1.4s ease;
+    transition-delay: var(--d, 0s);
+  }
+  body.opened .hero [data-r] { opacity: 1; transform: none; }
+
+  .cue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.75rem;
+    z-index: 4;
+    transform: translateX(-50%);
+    display: grid;
+    justify-items: center;
+    gap: .6rem;
+    padding: .5rem 1rem;
+    color: var(--ivory);
+    font-size: 1.1rem;
+    font-style: italic;
+    text-decoration: none;
+    white-space: nowrap;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 1.2s ease 4.2s;
+  }
+  body.opened .cue { opacity: .9; }
+  .cue:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .cue::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-right: 2px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
+    transform: rotate(45deg);
+    animation: bob 1.8s ease-in-out infinite;
+  }
+  @keyframes bob { 50% { transform: translateY(7px) rotate(45deg); } }
+
+  /* ---------- tickets ---------- */
+  .gift {
+    position: relative;
+    z-index: 4;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 1.5rem;
+    padding: 4.5rem 1.25rem 5rem;
+    text-align: center;
+  }
+  .gift h2 {
+    font-family: var(--script);
+    font-weight: 400;
+    font-size: clamp(2.4rem, 10.5vw, 3.6rem);
+    line-height: 1.12;
+    max-width: 14ch;
+    margin: 0;
+    color: var(--gold);
+    text-shadow: 0 2px 14px rgba(15, 7, 36, .8);
+  }
+  .gift-lead, .gift-end {
+    margin: 0;
+    font-size: clamp(1.25rem, 5vw, 1.55rem);
+    text-shadow: 0 2px 14px rgba(15, 7, 36, .9);
+  }
+  .gift-end { font-style: italic; margin-top: .5rem; }
+
+  .tickets {
+    display: grid;
+    gap: 2rem;
+    width: min(100%, 26rem);
+    margin: .75rem 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ticket-wrap {
+    filter: drop-shadow(0 16px 26px rgba(8, 3, 20, .6));
+    opacity: 0;
+    transform: translateY(46px);
+    transition: opacity .9s ease, transform 1s cubic-bezier(.2, .8, .2, 1);
+    transition-delay: var(--d, 0s);
+  }
+  .tickets.in .ticket-wrap { opacity: 1; transform: rotate(var(--tilt, 0deg)); }
+
+  .ticket {
+    --cut: 70%;
+    display: grid;
+    grid-template-columns: var(--cut) 1fr;
+    min-height: 9.5rem;
+    color: var(--ink);
+    text-align: left;
+    border-radius: 16px;
+    background:
+      linear-gradient(90deg, var(--wine) 0 7px, transparent 7px),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    -webkit-mask:
+      radial-gradient(circle 11px at var(--cut) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+      radial-gradient(circle 11px at var(--cut) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+    mask:
+      radial-gradient(circle 11px at var(--cut) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+      radial-gradient(circle 11px at var(--cut) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+  }
+  .ticket-main {
+    padding: 1.1rem 1rem 1.1rem 1.6rem;
+    display: grid;
+    align-content: center;
+  }
+  .band {
+    font-family: var(--script);
+    font-size: clamp(3rem, 14vw, 3.9rem);
+    line-height: .95;
+    color: var(--wine);
+  }
+  .band-sub {
+    margin-top: .35rem;
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.25;
+  }
+  .details {
+    margin: .7rem 0 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: .1rem .7rem;
+    font-size: 1.02rem;
+    line-height: 1.3;
+  }
+  .details dt { color: rgba(43, 18, 56, .62); }
+  .details dd { margin: 0; font-weight: 600; }
+  .ticket-stub {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: .35rem;
+    padding: .9rem .4rem;
+    text-align: center;
+    border-left: 2px dashed rgba(43, 18, 56, .32);
+  }
+  .ticket-stub svg { width: 1.9rem; height: 1.9rem; fill: #D24A7C; }
+  .owner { font-size: 1.2rem; font-weight: 600; line-height: 1.15; }
+  .seat { font-size: .95rem; line-height: 1.2; color: rgba(43, 18, 56, .7); }
+
+  /* ---------- music toggle ---------- */
+  .music {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + .75rem);
+    right: .75rem;
+    z-index: 6;
+    display: none;
+    align-items: center;
+    gap: .45rem;
+    padding: .4rem .85rem;
+    border: 1px solid rgba(243, 205, 130, .55);
+    border-radius: 999px;
+    background: rgba(20, 10, 44, .6);
+    color: var(--ivory);
+    font: 500 1rem/1.2 var(--serif);
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  body.opened .music { display: inline-flex; }
+  .music:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  .music svg { width: 1.05rem; height: 1.05rem; fill: var(--gold); }
+
+  @media (min-width: 720px) {
+    .tickets { width: 28rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero [data-r], .ticket-wrap, .cue, .cover, .envelope { transition: none; }
+    .envelope .seal, .cue::after, .balloon svg { animation: none; }
+    .tickets .ticket-wrap { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body class="locked">
+
+<div class="sky" aria-hidden="true"></div>
+<canvas id="stars" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="balloons" id="balloons" aria-hidden="true"></div>
+
+<!-- ============ MUQOVA ============ -->
+<div class="cover" id="cover">
+  <div>
+    <p class="cover-title">Sizga xat keldi</p>
+    <button class="open-btn" id="open" type="button">
+      <svg class="envelope" viewBox="0 0 280 190" aria-hidden="true">
+        <rect x="2" y="2" width="276" height="186" rx="14" fill="#FFF6E8"/>
+        <path d="M9 183 L112 96 M271 183 L168 96" stroke="#E2C48C" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M4 10 L140 112 L276 10" fill="#F9E3C3" stroke="#E2C48C" stroke-width="2" stroke-linejoin="round"/>
+        <g class="seal">
+          <circle cx="140" cy="104" r="27" fill="#B8336A"/>
+          <circle cx="140" cy="104" r="21" fill="none" stroke="#F58FB0" stroke-width="1.5"/>
+          <path transform="translate(126 90) scale(1.17)" fill="#FFF3E2" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </g>
+      </svg>
+      <span class="open-label">Xatni ochish</span>
+    </button>
+    <p class="cover-hint">Ovozni yoqib qo‘ying</p>
+  </div>
+</div>
+
+<button class="music" id="music" type="button" aria-pressed="true">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+  <span id="musicLabel">Musiqani o‘chirish</span>
+</button>
+
+<!-- ============ TABRIK ============ -->
+<main>
+  <section class="hero" id="tabrik">
+    <div class="hero-inner">
+      <h1 class="salute" data-r style="--d:.5s">Azizam,</h1>
+      <p data-r style="--d:1.5s">Har kunimni bayramga aylantirganingiz uchun rahmat.</p>
+      <p data-r style="--d:2.5s">Bugun esa bayramni men tayyorladim.</p>
+      <p class="sign" data-r style="--d:3.5s">Sizni sevuvchi turmush o‘rtog‘ingiz</p>
+    </div>
+    <a class="cue" href="#sovga">Sovg‘angiz pastda</a>
+  </section>
+
+  <!-- ============ BILETLAR ============ -->
+  <section class="gift" id="sovga">
+    <h2>Sevimli qo‘shiqlaringizni jonli eshitamiz</h2>
+    <p class="gift-lead">Ikkimizga ikkita bilet oldim.</p>
+
+    <ul class="tickets" id="tickets">
+      <li class="ticket-wrap" style="--tilt:-2deg; --d:.1s">
+        <div class="ticket">
+          <div class="ticket-main">
+            <div class="band">Benom</div>
+            <div class="band-sub">guruhining jonli konserti</div>
+            <!-- Sana, vaqt va joy ma'lum bo'lgach shu yerga qo'shiladi:
+            <dl class="details">
+              <dt>Sana</dt><dd>…</dd>
+              <dt>Vaqt</dt><dd>…</dd>
+              <dt>Joy</dt><dd>…</dd>
+            </dl> -->
+          </div>
+          <div class="ticket-stub">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <div class="owner">Sizniki</div>
+          </div>
+        </div>
+      </li>
+      <li class="ticket-wrap" style="--tilt:1.5deg; --d:.35s">
+        <div class="ticket">
+          <div class="ticket-main">
+            <div class="band">Benom</div>
+            <div class="band-sub">guruhining jonli konserti</div>
+          </div>
+          <div class="ticket-stub">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <div class="owner">Meniki</div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <p class="gift-end">Chiroyli kiyining, qolgani mendan.</p>
+  </section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function (s) { return document.querySelector(s); };
+  var cover = $('#cover'), openBtn = $('#open');
+  var fx = $('#fx'), ctx = fx.getContext('2d');
+  var starsCv = $('#stars'), sctx = starsCv.getContext('2d');
+  var balloonLayer = $('#balloons');
+  var ticketsEl = $('#tickets'), giftEl = $('#sovga');
+  var musicBtn = $('#music'), musicLabel = $('#musicLabel');
+
+  var W = 0, H = 0, DPR = 1;
+  var opened = false, giftVisible = false;
+  var rand = function (a, b) { return a + Math.random() * (b - a); };
+  var pick = function (arr) { return arr[(Math.random() * arr.length) | 0]; };
+
+  /* ================= sahna o'lchami va yulduzlar ================= */
+  function size() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    [fx, starsCv].forEach(function (c) { c.width = W * DPR; c.height = H * DPR; });
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    sctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    drawStars();
+  }
+  function drawStars() {
+    sctx.clearRect(0, 0, W, H);
+    var n = Math.round((W * H) / 9000);
+    for (var i = 0; i < n; i++) {
+      var y = Math.pow(Math.random(), 1.6) * H * 0.85;
+      sctx.globalAlpha = rand(0.25, 0.9);
+      sctx.fillStyle = '#FFF3E2';
+      sctx.beginPath();
+      sctx.arc(Math.random() * W, y, rand(0.4, 1.3), 0, Math.PI * 2);
+      sctx.fill();
+    }
+    sctx.globalAlpha = 1;
+  }
+  var resizeT;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(size, 150);
+  });
+  size();
+
+  /* ================= salyut ================= */
+  var COLORS = ['#F3CD82', '#F58FB0', '#FFF3E2', '#FFAE8A', '#9FE8D8', '#C9A7FF'];
+  var rockets = [], sparks = [];
+  var nextLaunch = 0, lastFrame = 0, running = false;
+
+  function launch(x) {
+    if (x == null) x = W * rand(0.12, 0.88);
+    rockets.push({
+      x: x, y: H + 8, px: x, py: H + 8,
+      tx: x + rand(-40, 40), ty: H * rand(0.12, 0.48),
+      color: pick(COLORS)
+    });
+  }
+  function explode(r) {
+    var scale = Math.max(0.75, Math.min(1.35, Math.min(W, H) / 620));
+    var n = Math.round(rand(60, 95));
+    var second = Math.random() < 0.45 ? pick(COLORS) : r.color;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2;
+      var sp = rand(1.2, 4.6) * scale;
+      sparks.push({
+        x: r.x, y: r.y, px: r.x, py: r.y,
+        vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+        life: 1, decay: rand(0.011, 0.022),
+        color: i % 3 === 0 ? second : r.color
+      });
+    }
+    if (sparks.length > 900) sparks.splice(0, sparks.length - 900);
+  }
+  function frame(now) {
+    if (!running) return;
+    var dt = Math.min(2.5, (now - lastFrame) / 16.67) || 1;
+    lastFrame = now;
+
+    if (now > nextLaunch) {
+      launch();
+      nextLaunch = now + (giftVisible ? rand(1900, 3600) : rand(450, 1150));
+    }
+
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = 'rgba(0,0,0,' + Math.min(0.5, 0.2 * dt) + ')';
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round';
+
+    var i, r, s;
+    for (i = rockets.length - 1; i >= 0; i--) {
+      r = rockets[i];
+      r.px = r.x; r.py = r.y;
+      var k = 1 - Math.pow(1 - 0.075, dt);
+      r.x += (r.tx - r.x) * k;
+      r.y += (r.ty - r.y) * k;
+      ctx.globalAlpha = 0.9;
+      ctx.strokeStyle = r.color;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(r.px, r.py); ctx.lineTo(r.x, r.y); ctx.stroke();
+      if (Math.abs(r.ty - r.y) < 6) { explode(r); rockets.splice(i, 1); }
+    }
+    var fr = Math.pow(0.975, dt);
+    for (i = sparks.length - 1; i >= 0; i--) {
+      s = sparks[i];
+      s.px = s.x; s.py = s.y;
+      s.vx *= fr; s.vy = s.vy * fr + 0.045 * dt;
+      s.x += s.vx * dt; s.y += s.vy * dt;
+      s.life -= s.decay * dt;
+      if (s.life <= 0) { sparks.splice(i, 1); continue; }
+      ctx.globalAlpha = Math.max(0, s.life);
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 1.7;
+      ctx.beginPath(); ctx.moveTo(s.px, s.py); ctx.lineTo(s.x, s.y); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+  function startFireworks() {
+    if (reduce || running) return;
+    running = true;
+    lastFrame = performance.now();
+    nextLaunch = lastFrame + 900;
+    requestAnimationFrame(frame);
+  }
+  function stopFireworks() { running = false; }
+
+  /* ================= sharlar ================= */
+  var BALLOON_COLORS = ['#F58FB0', '#F3CD82', '#FFAE8A', '#D86B9A', '#C9A7FF', '#FFF3E2'];
+  var balloonTimer = null;
+
+  function spawnBalloon(delay) {
+    if (reduce || balloonLayer.childElementCount > 16) return;
+    var w = rand(46, 84);
+    var c = pick(BALLOON_COLORS);
+    var el = document.createElement('div');
+    el.className = 'balloon';
+    el.style.left = 'calc(' + rand(2, 98).toFixed(1) + '% - ' + (w / 2).toFixed(0) + 'px)';
+    el.style.animationDuration = rand(9, 15).toFixed(1) + 's';
+    el.style.animationDelay = (delay || 0).toFixed(2) + 's';
+    el.style.opacity = rand(0.82, 0.96).toFixed(2);
+    el.innerHTML =
+      '<svg viewBox="0 0 60 150" width="' + w.toFixed(0) + '" style="animation-delay:-' + rand(0, 3).toFixed(1) + 's">' +
+      '<path d="M30 76 C24 96 36 112 30 148" stroke="rgba(255,243,226,.55)" stroke-width="1.2" fill="none"/>' +
+      '<path d="M30 2 C12 2 2 16 2 32 C2 50 18 66 30 70 C42 66 58 50 58 32 C58 16 48 2 30 2Z" fill="' + c + '"/>' +
+      '<path d="M25.5 69 L34.5 69 L30 77Z" fill="' + c + '"/>' +
+      '<ellipse cx="19" cy="22" rx="5.5" ry="10" fill="rgba(255,255,255,.38)" transform="rotate(-24 19 22)"/>' +
+      '</svg>';
+    el.addEventListener('animationend', function (e) {
+      if (e.target === el) el.remove();
+    });
+    balloonLayer.appendChild(el);
+  }
+  function balloonLoop() {
+    spawnBalloon(0);
+    balloonTimer = setTimeout(balloonLoop, giftVisible ? rand(4200, 6500) : rand(1300, 2300));
+  }
+  function startBalloons() {
+    if (reduce) return;
+    for (var i = 0; i < 12; i++) spawnBalloon(i * 0.45 + rand(0, 0.3));
+    balloonTimer = setTimeout(balloonLoop, 5500);
+  }
+
+  /* ================= musiqa (Pachelbel, Kanon re-major) ================= */
+  var ac = null, master = null, bus = null, schedTimer = null;
+  var nextT = 0, step = 0, muted = false, silentEl = null;
+  var EIGHTH = 0.4, VOLUME = 0.75;
+
+  var SEMI = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
+  function hz(n) {
+    var m = /^([A-G]#?)(\d)$/.exec(n);
+    var midi = SEMI[m[1]] + (parseInt(m[2], 10) + 1) * 12;
+    return 440 * Math.pow(2, (midi - 69) / 12);
+  }
+  var BASS = ['D3', 'A2', 'B2', 'F#2', 'G2', 'D3', 'G2', 'A2'];
+  var ARP = [
+    ['D4', 'F#4', 'A4', 'F#4'], ['C#4', 'E4', 'A4', 'E4'],
+    ['B3', 'D4', 'F#4', 'D4'], ['A3', 'C#4', 'F#4', 'C#4'],
+    ['B3', 'D4', 'G4', 'D4'], ['A3', 'D4', 'F#4', 'D4'],
+    ['B3', 'D4', 'G4', 'D4'], ['C#4', 'E4', 'A4', 'E4']
+  ];
+  var LINE1 = ['F#5', 'E5', 'D5', 'C#5', 'B4', 'A4', 'B4', 'C#5'];
+  var LINE2 = ['D5', 'C#5', 'B4', 'A4', 'G4', 'F#4', 'G4', 'E4'];
+  var LINE3 = [
+    'D5', 'F#5', 'A5', 'G5', 'F#5', 'D5', 'F#5', 'E5',
+    'D5', 'B4', 'D5', 'A5', 'G5', 'B5', 'A5', 'G5',
+    'F#5', 'D5', 'E5', 'C#6', 'D6', 'F#6', 'A6', 'A5',
+    'B5', 'G5', 'A5', 'F#5', 'D5', 'D6', 'D6', 'C#6'
+  ];
+
+  function impulse(sec) {
+    var len = (ac.sampleRate * sec) | 0;
+    var b = ac.createBuffer(2, len, ac.sampleRate);
+    for (var c = 0; c < 2; c++) {
+      var d = b.getChannelData(c);
+      for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6);
+    }
+    return b;
+  }
+  function voice(freq, t, dur, vol, type) {
+    var o = ac.createOscillator(), g = ac.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(bus);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+  function bell(note, t, dur, vol) {
+    var f = hz(note);
+    voice(f, t, dur, vol, 'sine');
+    voice(f * 2, t, dur * 0.45, vol * 0.22, 'sine');
+    voice(f * 3, t, 0.28, vol * 0.1, 'sine');
+  }
+  function playStep(s, t) {
+    var pass = Math.floor(s / 32), pos = s % 32;
+    var chord = Math.floor(pos / 4), sub = pos % 4;
+    var kind = pass === 0 ? 0 : ((pass - 1) % 4) + 1;
+
+    if (sub === 0) voice(hz(BASS[chord]), t, EIGHTH * 4.4, 0.2, 'triangle');
+    voice(hz(ARP[chord][sub]), t, EIGHTH * 2.6, kind === 3 || kind === 4 ? 0.055 : 0.08, 'triangle');
+
+    if (kind === 1 && sub === 0) bell(LINE1[chord], t, EIGHTH * 5, 0.17);
+    if (kind === 2 && sub === 0) {
+      bell(LINE1[chord], t, EIGHTH * 5, 0.15);
+      bell(LINE2[chord], t, EIGHTH * 5, 0.11);
+    }
+    if (kind === 3) bell(LINE3[pos], t, EIGHTH * 2.4, pos > 19 && pos < 23 ? 0.085 : 0.12);
+    if (kind === 4) {
+      bell(LINE3[pos], t, EIGHTH * 2.4, pos > 19 && pos < 23 ? 0.075 : 0.1);
+      if (sub === 0) bell(LINE2[chord], t, EIGHTH * 5, 0.1);
+    }
+  }
+  function schedule() {
+    if (!ac || ac.state !== 'running') return;
+    if (nextT < ac.currentTime) nextT = ac.currentTime + 0.08;
+    while (nextT < ac.currentTime + 0.35) {
+      playStep(step, nextT);
+      nextT += EIGHTH;
+      step++;
+    }
+  }
+  /* iPhone ovozsiz rejimda ham musiqa eshitilishi uchun jimjit audio */
+  function startSilentLoop() {
+    try {
+      var sr = 8000, n = 1600, buf = new Uint8Array(44 + n), dv = new DataView(buf.buffer);
+      var w = function (o, str) { for (var i = 0; i < str.length; i++) buf[o + i] = str.charCodeAt(i); };
+      w(0, 'RIFF'); dv.setUint32(4, 36 + n, true); w(8, 'WAVEfmt ');
+      dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+      dv.setUint32(24, sr, true); dv.setUint32(28, sr, true);
+      dv.setUint16(32, 1, true); dv.setUint16(34, 8, true);
+      w(36, 'data'); dv.setUint32(40, n, true);
+      for (var i = 44; i < buf.length; i++) buf[i] = 128;
+      var bin = '';
+      for (var j = 0; j < buf.length; j++) bin += String.fromCharCode(buf[j]);
+      silentEl = new Audio('data:audio/wav;base64,' + btoa(bin));
+      silentEl.loop = true;
+      silentEl.setAttribute('playsinline', '');
+      var p = silentEl.play();
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) { silentEl = null; }
+  }
+  function startMusic() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      startSilentLoop();
+      ac = new AC();
+      master = ac.createGain();
+      master.gain.value = 0.0001;
+      bus = ac.createGain();
+      var conv = ac.createConvolver(); conv.buffer = impulse(2.4);
+      var wet = ac.createGain(); wet.gain.value = 0.3;
+      var comp = ac.createDynamicsCompressor();
+      bus.connect(master);
+      bus.connect(conv); conv.connect(wet); wet.connect(master);
+      master.connect(comp); comp.connect(ac.destination);
+      if (ac.state === 'suspended') ac.resume();
+      master.gain.linearRampToValueAtTime(VOLUME, ac.currentTime + 2.2);
+      nextT = ac.currentTime + 0.5;
+      schedTimer = setInterval(schedule, 90);
+    } catch (e) { ac = null; }
+  }
+  function setMuted(m) {
+    muted = m;
+    musicBtn.setAttribute('aria-pressed', String(!m));
+    musicLabel.textContent = m ? 'Musiqani yoqish' : 'Musiqani o‘chirish';
+    if (!ac) return;
+    if (m) {
+      master.gain.cancelScheduledValues(ac.currentTime);
+      master.gain.setTargetAtTime(0.0001, ac.currentTime, 0.06);
+      setTimeout(function () { if (muted && ac) ac.suspend(); }, 300);
+      if (silentEl) silentEl.pause();
+    } else {
+      ac.resume();
+      master.gain.cancelScheduledValues(ac.currentTime);
+      master.gain.setTargetAtTime(VOLUME, ac.currentTime, 0.25);
+      if (silentEl) { var p = silentEl.play(); if (p && p.catch) p.catch(function () {}); }
+    }
+  }
+  musicBtn.addEventListener('click', function () { setMuted(!muted); });
+
+  /* ================= ochilish ================= */
+  function openLetter() {
+    if (opened) return;
+    opened = true;
+    startMusic();
+    cover.classList.add('gone');
+    document.body.classList.remove('locked');
+    document.body.classList.add('opened');
+    startFireworks();
+    if (!reduce) {
+      [0.22, 0.5, 0.78, 0.36, 0.64].forEach(function (p, i) {
+        setTimeout(function () { launch(W * p); }, 250 + i * 260);
+      });
+    }
+    startBalloons();
+  }
+  openBtn.addEventListener('click', openLetter);
+
+  /* ================= biletlar ko'ringanda ================= */
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      giftVisible = entries[0].isIntersecting;
+    }, { threshold: 0.3 }).observe(giftEl);
+
+    var once = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      ticketsEl.classList.add('in');
+      if (running) {
+        [0.2, 0.8, 0.5].forEach(function (p, i) {
+          setTimeout(function () { launch(W * p); }, i * 300);
+        });
+      }
+      once.disconnect();
+    }, { threshold: 0.3 });
+    once.observe(ticketsEl);
+  } else {
+    ticketsEl.classList.add('in');
+  }
+
+  /* ================= fon rejimi ================= */
+  document.addEventListener('visibilitychange', function () {
+    if (!opened) return;
+    if (document.hidden) {
+      stopFireworks();
+      clearTimeout(balloonTimer);
+      if (ac) ac.suspend();
+      if (silentEl) silentEl.pause();
+    } else {
+      startFireworks();
+      if (!reduce) balloonTimer = setTimeout(balloonLoop, 800);
+      if (ac && !muted) {
+        ac.resume();
+        if (silentEl) { var p = silentEl.play(); if (p && p.catch) p.catch(function () {}); }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
