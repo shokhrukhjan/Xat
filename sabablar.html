@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sen uchun</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23F58FB0' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky-top: #2A0A1E;
+    --sky-mid: #5A1233;
+    --sky-low: #9A3355;
+    --gold: #F3CD82;
+    --rose: #F27A9B;
+    --blush: #FFD9E0;
+    --ivory: #FFF4EA;
+    --ink: #3A0F24;
+    --wine: #8C1D45;
+    --script: "Great Vibes", "Snell Roundhand", "Apple Chancery", cursive;
+    --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, "Times New Roman", serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --sky-top: #22081A; --sky-mid: #4E0F2C; --sky-low: #8A2C4B; }
+  }
+  :root[data-theme="dark"] { --sky-top: #22081A; --sky-mid: #4E0F2C; --sky-low: #8A2C4B; }
+
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--sky-top);
+    color: var(--ivory);
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.45;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+  .sky, #stars, #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .sky {
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 95% 50% at 50% 56%, rgba(255, 150, 150, .26), transparent 70%),
+      radial-gradient(ellipse 80% 38% at 50% 106%, rgba(255, 196, 150, .30), transparent 70%),
+      linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 58%, var(--sky-low) 100%);
+  }
+  #stars { z-index: 0; }
+  #fx { z-index: 8; }
+
+  /* ---------- to'kilayotgan gulbarglar ---------- */
+  .petals { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .petal { position: absolute; top: -8vh; animation: fall linear infinite; will-change: transform; }
+  .petal svg { display: block; animation: flutter ease-in-out infinite alternate; }
+  @keyframes fall { to { transform: translate(var(--drift), 118vh); } }
+  @keyframes flutter {
+    from { transform: rotate(-50deg) rotateY(0deg); }
+    to   { transform: rotate(70deg) rotateY(62deg); }
+  }
+
+  /* ---------- asosiy sahna ---------- */
+  .stage {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    justify-items: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 3.75rem 1.25rem 2.5rem;
+    text-align: center;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--script);
+    font-weight: 400;
+    font-size: clamp(2.6rem, 11.5vw, 4rem);
+    line-height: 1.08;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(255, 150, 170, .5), 0 2px 14px rgba(40, 6, 24, .8);
+  }
+  h1 span { display: block; }
+
+  .jar-wrap { position: relative; width: min(62vw, 250px); }
+  .jar-wrap::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 56%;
+    width: 185%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255, 186, 160, .34) 0%, rgba(255, 130, 160, .14) 42%, transparent 68%);
+    pointer-events: none;
+    animation: glow 4.5s ease-in-out infinite alternate;
+  }
+  @keyframes glow { from { opacity: .65; } to { opacity: 1; } }
+  .jar {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    border-radius: 24px;
+  }
+  .jar:focus-visible { outline: 2px solid var(--gold); outline-offset: 8px; }
+  .jar svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 18px 28px rgba(30, 4, 18, .55)); }
+  .jar .lid { transform-box: fill-box; transform-origin: 0% 100%; transition: transform .35s cubic-bezier(.3, .8, .3, 1); }
+  .jar.open .lid { transform: rotate(-32deg) translate(-3px, -4px); }
+  .jar.wiggle svg { animation: wiggle .38s ease-in-out; }
+  @keyframes wiggle {
+    25% { transform: rotate(-4deg); }
+    75% { transform: rotate(4deg); }
+  }
+  .jar.idle svg { animation: nudge 3.2s ease-in-out infinite; }
+  @keyframes nudge {
+    0%, 82%, 100% { transform: none; }
+    86% { transform: rotate(-2.5deg); }
+    92% { transform: rotate(2.5deg); }
+  }
+
+  .puff {
+    position: absolute;
+    left: 50%;
+    top: 12%;
+    width: 22px;
+    height: 22px;
+    margin-left: -11px;
+    pointer-events: none;
+    animation: puff 1.5s ease-out forwards;
+  }
+  .puff svg { width: 100%; height: 100%; display: block; }
+  @keyframes puff {
+    0% { transform: translate(0, 0) scale(.3); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(var(--dx), -170px) scale(1.1); opacity: 0; }
+  }
+
+  .below { display: grid; justify-items: center; gap: .6rem; min-height: 6.5rem; align-content: start; }
+  .hint { margin: 0; max-width: 22ch; font-size: clamp(1.2rem, 4.8vw, 1.4rem); text-shadow: 0 2px 14px rgba(15, 7, 36, .9); }
+  .count { margin: 0; font-size: 1.1rem; font-style: italic; color: rgba(255, 243, 226, .75); font-variant-numeric: tabular-nums; }
+  .done-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; }
+  .btn {
+    padding: .55rem 1.2rem;
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    background: rgba(60, 10, 34, .55);
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  [hidden] { display: none !important; }
+
+  /* ---------- ochilgan xatcha ---------- */
+  .veil {
+    position: fixed;
+    inset: 0;
+    z-index: 7;
+    background: rgba(34, 6, 22, .76);
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .veil.on { opacity: 1; }
+  .note-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
+    pointer-events: none;
+  }
+  .note {
+    --paper: #FFF8EC;
+    --rot: 0deg;
+    pointer-events: auto;
+    width: min(100%, 24rem);
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    padding: 2rem 1.75rem 1.6rem;
+    color: var(--ink);
+    text-align: center;
+    border-radius: 20px;
+    background-color: var(--paper);
+    outline: 1px solid rgba(140, 29, 69, .3);
+    outline-offset: -9px;
+    box-shadow: 0 22px 44px rgba(30, 4, 18, .6), 0 0 70px rgba(255, 140, 165, .28);
+    transform: rotate(var(--rot));
+    animation: unfold .7s cubic-bezier(.2, .8, .25, 1) both;
+  }
+  .note.out { animation: away .24s ease-in forwards; }
+  .note.final { outline: 2px solid var(--gold); outline-offset: -8px; }
+  @keyframes unfold {
+    0% { transform: translateY(20vh) scale(.1) rotate(-16deg); opacity: 0; }
+    35% { opacity: 1; }
+    100% { transform: rotate(var(--rot)) scale(1); opacity: 1; }
+  }
+  @keyframes away {
+    to { transform: translateY(-26px) scale(.94) rotate(var(--rot)); opacity: 0; }
+  }
+  .note-num {
+    margin: 0 0 .5rem;
+    font-family: var(--script);
+    font-size: 2.1rem;
+    line-height: 1.1;
+    color: var(--wine);
+  }
+  .note-num::before {
+    content: "";
+    display: block;
+    width: 1.7rem;
+    height: 1.7rem;
+    margin: 0 auto .3rem;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23E0457B' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  .note-text {
+    margin: 0;
+    font-size: clamp(1.4rem, 5.6vw, 1.7rem);
+    line-height: 1.34;
+    font-weight: 500;
+  }
+  .note.final .note-text { font-weight: 600; }
+  .note-actions { display: grid; justify-items: center; gap: .55rem; margin-top: 1.4rem; }
+  .next {
+    padding: .6rem 1.5rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--wine);
+    color: var(--ivory);
+    font-weight: 600;
+    font-size: 1.15rem;
+  }
+  .back {
+    padding: .25rem .6rem;
+    border: 0;
+    background: none;
+    color: rgba(43, 18, 56, .7);
+    font-size: 1.02rem;
+    text-decoration: underline;
+    text-underline-offset: .22em;
+  }
+  .next:focus-visible, .back:focus-visible { outline: 2px solid var(--wine); outline-offset: 3px; }
+  .note-count { margin: .2rem 0 0; font-size: .98rem; color: rgba(43, 18, 56, .6); font-variant-numeric: tabular-nums; }
+
+  /* ---------- barcha xatchalar ---------- */
+  .all {
+    position: relative;
+    z-index: 1;
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+  .all h2 {
+    margin: 0 0 1.5rem;
+    font-family: var(--script);
+    font-weight: 400;
+    font-size: clamp(2.3rem, 10vw, 3.2rem);
+    line-height: 1.1;
+    text-align: center;
+    color: var(--gold);
+  }
+  .all ol { margin: 0; padding: 0; list-style: none; counter-reset: r; }
+  .all li {
+    counter-increment: r;
+    display: grid;
+    grid-template-columns: 2.6rem 1fr;
+    gap: .5rem;
+    padding: .95rem 0;
+    border-bottom: 1px solid rgba(255, 243, 226, .16);
+    font-size: 1.28rem;
+    line-height: 1.38;
+  }
+  .all li::before {
+    content: counter(r);
+    font-family: var(--script);
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--gold);
+  }
+
+  /* ---------- musiqa ---------- */
+  .music {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + .75rem);
+    right: .75rem;
+    z-index: 6;
+    display: none;
+    align-items: center;
+    gap: .45rem;
+    padding: .4rem .85rem;
+    border: 1px solid rgba(243, 205, 130, .55);
+    border-radius: 999px;
+    background: rgba(60, 10, 34, .6);
+    font-size: 1rem;
+    line-height: 1.2;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  body.started .music { display: inline-flex; }
+  .music:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  .music svg { width: 1.05rem; height: 1.05rem; fill: var(--gold); }
+
+  @media (max-height: 640px) {
+    .stage { padding-top: 3.25rem; gap: .5rem; }
+    .jar-wrap { width: min(48vw, 200px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .note, .note.out, .jar.wiggle svg, .jar.idle svg, .puff, .jar-wrap::before { animation: none; }
+    .petals { display: none; }
+    .jar .lid, .veil { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sky" aria-hidden="true"></div>
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="petals" id="petals" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<button class="music" id="music" type="button" aria-pressed="true">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+  <span id="musicLabel">Musiqani o‘chirish</span>
+</button>
+
+<main>
+  <section class="stage">
+    <h1><span>Seni sevishimning</span><span>50 ta sababi</span></h1>
+
+    <div class="jar-wrap" id="jarWrap">
+      <button class="jar idle" id="jar" type="button" aria-label="Bankadan xatcha olish">
+        <svg viewBox="0 0 240 320" aria-hidden="true">
+          <defs>
+            <clipPath id="inside">
+              <path d="M74 82 C74 98 50 102 50 132 L50 280 Q50 300 70 300 L170 300 Q190 300 190 280 L190 132 C190 102 166 98 166 82 Z"/>
+            </clipPath>
+          </defs>
+          <!-- shisha -->
+          <path d="M70 78 C70 96 46 100 46 130 L46 282 Q46 304 68 304 L172 304 Q194 304 194 282 L194 130 C194 100 170 96 170 78 Z"
+                fill="rgba(255,243,226,.07)" stroke="rgba(255,243,226,.6)" stroke-width="3" stroke-linejoin="round"/>
+          <g id="notes" clip-path="url(#inside)"></g>
+          <path d="M60 142 Q56 205 60 268" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M178 150 Q181 180 178 210" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="3" stroke-linecap="round"/>
+          <!-- bo'g'iz -->
+          <rect x="63" y="62" width="114" height="19" rx="7" fill="rgba(255,243,226,.14)" stroke="rgba(255,243,226,.6)" stroke-width="3"/>
+          <!-- yorliq -->
+          <path d="M172 78 q24 6 27 30" fill="none" stroke="rgba(255,243,226,.7)" stroke-width="1.4"/>
+          <g transform="translate(199 106) rotate(13)">
+            <rect x="-15" y="0" width="30" height="40" rx="4" fill="#FFF3E2"/>
+            <circle cx="0" cy="6" r="2.2" fill="#2B1247"/>
+            <path transform="translate(-9 13) scale(.75)" fill="#D24A7C" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </g>
+          <!-- qopqoq -->
+          <g class="lid">
+            <rect x="58" y="34" width="124" height="32" rx="9" fill="#D9A85B"/>
+            <rect x="58" y="34" width="124" height="11" rx="5.5" fill="#F3CD82"/>
+            <rect x="58" y="55" width="124" height="4" fill="rgba(107,31,75,.28)"/>
+          </g>
+          <!-- bant -->
+          <rect x="64.5" y="70" width="111" height="8" fill="#E0457B"/>
+          <path d="M117 77 L106 100 L112 97 L116 102 L121 79 Z M123 77 L134 100 L128 97 L124 102 L119 79 Z" fill="#C73568"/>
+          <path d="M120 75 C108 60 89 61 91 75 C89 89 108 90 120 75 Z M120 75 C132 60 151 61 149 75 C151 89 132 90 120 75 Z"
+                fill="#E0457B" stroke="rgba(90,10,40,.35)" stroke-width="1"/>
+          <rect x="114.5" y="68.5" width="11" height="13" rx="4.5" fill="#F27A9B"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="below">
+      <p class="hint" id="hint" aria-live="polite">Bankaga bos — har safar bitta xatcha chiqadi</p>
+      <p class="count" id="count">0 / 50</p>
+      <div class="done-actions" id="doneActions" hidden>
+        <button class="btn" id="readAll" type="button">Barchasini o‘qish</button>
+        <button class="btn" id="refill" type="button">Bankani qayta to‘ldirish</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="all" id="all" hidden>
+    <h2>Barcha xatchalar</h2>
+    <ol id="allList"></ol>
+  </section>
+</main>
+
+<div class="veil" id="veil" hidden></div>
+<div class="note-wrap" id="noteWrap" hidden>
+  <article class="note" id="note" role="dialog" aria-modal="true" aria-labelledby="noteNum" aria-describedby="noteText">
+    <p class="note-num" id="noteNum"></p>
+    <p class="note-text" id="noteText"></p>
+    <div class="note-actions">
+      <button class="next" id="next" type="button">Keyingi xatcha</button>
+      <button class="back" id="back" type="button">Bankaga qaytish</button>
+      <p class="note-count" id="noteCount"></p>
+    </div>
+  </article>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var REASONS = [
+    "Dunyodagi eng go‘zal va shirin farzandimiz Muhammad Umarni dunyoga keltirib, menga ota bo‘lish baxtini berganing uchun.",
+    "Tunlarni bedor o‘tkazib, Muhammad Umarga mehr va e’tibor berayotgan fidoyi onaliging uchun.",
+    "Sen kulganingda butun dunyom yorishib ketadi.",
+    "Har safar ko‘zlaringga qaraganimda, qalbimda xotirjamlik va halovat topaman.",
+    "Farzandimizga mehr berishingni va uni ardoqlashingni kuzatish men uchun eng katta baxt.",
+    "Meni har kuni yaxshiroq inson va mas’uliyatli ota bo‘lishga undashing uchun.",
+    "Kulging va samimiy ovozing eng sehrli kuydan ham yoqimliroq.",
+    "Sen yonimda bo‘lganingda o‘zimni dunyodagi eng omadli va baxtli inson deb hisoblayman.",
+    "Menga va oilamizga bo‘lgan cheksiz ishonching hamda mehring uchun.",
+    "Sen bilan Muhammad Umarning kelajagi va orzulari haqida xayol surishni juda yaxshi ko‘raman.",
+    "Har safar ismingni eshitganimda yuragim o‘zgacha hayajon bilan ura boshlaydi.",
+    "Sen bilan birga kechirgan har bir daqiqam va birgalikdagi oilaviy lahzalarimiz men uchun qadrli.",
+    "Qiyin va horg‘in kunlarimda ham eng katta tasalli hamda suyanchig‘im bo‘lganing uchun.",
+    "Barcha charchoqlaringga qaramay, menga va farzandimizga tabassum bilan qarashing uchun.",
+    "Sen bilan birga bo‘lganimda vaqt qanday o‘tganini sezmay qolaman.",
+    "Beg‘ubor qalbing, sabring va samimiyliging uchun.",
+    "Mening orzularimga, maqsadlarimga va kuchimga doim ishonganing uchun.",
+    "Sen mening hayotimdagi eng go‘zal va kutilmagan mo‘jizasisan.",
+    "Yonimda bo‘lmasang ham, doim xayolimda, qalbimda va duolarimda yashashing uchun.",
+    "Meni borimcha qabul qilganing va har qanday holatda tushunganing uchun.",
+    "Muhammad Umarga ko‘rsatayotgan cheksiz mehring uchun senga har kuni qaytadan oshiq bo‘laman.",
+    "Sen bilan shunchaki jim o‘tirish ham eng maroqli suhbatdek tuyuladi.",
+    "Kulishingdagi o‘sha o‘zgacha samimiyat va sho‘xlik uchun.",
+    "Har kuni sening yangi qirralaringni kashf etishni yaxshi ko‘raman.",
+    "Sen bilan har bir fasl, har bir kun va har bir lahza go‘zal.",
+    "Men va farzandimiz uchun eng xavfsiz va tinch makon — sening bag‘ring.",
+    "Mening ichki kechinmalarimni bir og‘iz so‘zsiz ham tushuna olishing uchun.",
+    "Qalbingning naqadar pok, sabrli va mehribonligini bilganim uchun.",
+    "Hayotimga, xonadonimga va taqdirimga mazmun va nur olib kirganing uchun.",
+    "Sen haqingda o‘ylaganimning o‘zidayoq yuzimda tabassum paydo bo‘ladi.",
+    "Sen bilan har bir oddiy kunimiz ham haqiqiy bayramga aylanadi.",
+    "Shirin va kutilmagan e’tiboring bilan ko‘nglimni ko‘tarishni bilganing uchun.",
+    "Meni har doim tinglay olganing va tushunganing uchun.",
+    "Yuragimdagi eng pinhona sirlarni faqat sen bilan baham ko‘ra olganim uchun.",
+    "Sen bilan oilamizdagi har qanday qiyinchilik yengil tuyuladi.",
+    "Dunyodagi eng go‘zal va mehribon ko‘zlar sening ko‘zlaring bo‘lgani uchun.",
+    "Menga bergan har bir issiq va samimiy tabassuming uchun.",
+    "Meni chin dildan sevishingni har bir harakatingda his qildirganing uchun.",
+    "Hayotimdagi eng to‘g‘ri va eng go‘zal tanlovim bo‘lganing uchun.",
+    "Birga o‘tkazgan va oila bo‘lib to‘plagan har bir xotiramiz oltindan qadrli.",
+    "Sen bilan o‘zimni tamomila erkin va baxtiyor his qilaman.",
+    "Mening har bir kichik muvaffaqiyatimdan samimiy quvonganing uchun.",
+    "Sening borliging hamda onalik mehring menga kuch va ilhom beradi.",
+    "Mehribon, muloyim va sabrli xaraktering uchun.",
+    "Sen bilan har bir uchrashuv xuddi birinchi uchrashuvdek hayajonli.",
+    "Qalbimdagi barcha bo‘shliqlarni faqat sen to‘ldira olganing uchun.",
+    "Qo‘lingdan tutganimda tuyuladigan o‘sha o‘zgacha issiqlik va halovat uchun.",
+    "Menga haqiqiy muhabbat va oila baxtining ma’nosini o‘rgatganing uchun.",
+    "Sen mening eng yaqin do‘stim, sirdoshim, jufti halolim va yagona sevgimsan.",
+    "Chunki sen qalbimning yagona egasisan va bizning farzandimizning eng go‘zal va mehribon onasisan!"
+  ];
+  var TOTAL = REASONS.length;
+  var KEY = 'sen-uchun-50-v1';
+  /* [bankadagi xatcha rangi, ochilgan qog'oz rangi] */
+  var TINTS = [
+    ['#F27A9B', '#FFE8EE'], ['#E0457B', '#FFE3EB'], ['#FFB3C6', '#FFF0F3'],
+    ['#F3CD82', '#FFF4DC'], ['#FFF1E6', '#FFF9F1'], ['#D9475F', '#FFE6E6']
+  ];
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function (s) { return document.querySelector(s); };
+  var jar = $('#jar'), jarWrap = $('#jarWrap'), notesG = $('#notes');
+  var hint = $('#hint'), count = $('#count'), doneActions = $('#doneActions');
+  var veil = $('#veil'), noteWrap = $('#noteWrap'), note = $('#note');
+  var noteNum = $('#noteNum'), noteText = $('#noteText'), noteCount = $('#noteCount');
+  var nextBtn = $('#next'), backBtn = $('#back');
+  var allSec = $('#all'), allList = $('#allList');
+  var musicBtn = $('#music'), musicLabel = $('#musicLabel');
+  var fx = $('#fx'), ctx = fx.getContext('2d');
+  var starsCv = $('#stars'), sctx = starsCv.getContext('2d');
+  var rand = function (a, b) { return a + Math.random() * (b - a); };
+  var pick = function (arr) { return arr[(Math.random() * arr.length) | 0]; };
+
+  /* ================= holat (qayerda to'xtaganini eslab qoladi) ================= */
+  function buildOrder() {
+    var mid = [], i, j, t;
+    for (i = 1; i < TOTAL - 1; i++) mid.push(i);
+    for (i = mid.length - 1; i > 0; i--) {
+      j = (Math.random() * (i + 1)) | 0;
+      t = mid[i]; mid[i] = mid[j]; mid[j] = t;
+    }
+    return [0].concat(mid, [TOTAL - 1]);
+  }
+  function loadState() {
+    try {
+      var s = JSON.parse(localStorage.getItem(KEY));
+      if (!s || !Array.isArray(s.order) || s.order.length !== TOTAL) return null;
+      if (typeof s.idx !== 'number' || s.idx < 0 || s.idx > TOTAL) return null;
+      var seen = {};
+      for (var i = 0; i < TOTAL; i++) {
+        var v = s.order[i];
+        if (typeof v !== 'number' || v < 0 || v >= TOTAL || seen[v]) return null;
+        seen[v] = true;
+      }
+      return { order: s.order, idx: Math.floor(s.idx) };
+    } catch (e) { return null; }
+  }
+  function saveState() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  var state = loadState() || { order: buildOrder(), idx: 0 };
+
+  /* ================= bankadagi xatchalar ================= */
+  var NS = 'http://www.w3.org/2000/svg';
+  var seed = 11;
+  function sr() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+  var slots = [];
+  (function () {
+    var PER = 7;
+    for (var i = 0; i < TOTAL; i++) {
+      var row = Math.floor(i / PER), col = i % PER;
+      var inRow = Math.min(PER, TOTAL - row * PER);
+      var x0 = 120 - ((inRow - 1) * 18.5) / 2;
+      slots.push({
+        x: x0 + col * 18.5 + (sr() - 0.5) * 8,
+        y: 284 - row * 19.5 + (sr() - 0.5) * 6,
+        rot: (sr() - 0.5) * 76,
+        tint: Math.floor(sr() * TINTS.length)
+      });
+    }
+  })();
+  var HEART = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
+  function drawNotes() {
+    while (notesG.firstChild) notesG.removeChild(notesG.firstChild);
+    var remaining = TOTAL - state.idx;
+    for (var i = 0; i < remaining; i++) {
+      var s = slots[i];
+      var g = document.createElementNS(NS, 'g');
+      g.setAttribute('transform', 'translate(' + s.x.toFixed(1) + ' ' + s.y.toFixed(1) + ') rotate(' + (s.rot * 0.75).toFixed(1) + ') scale(.96) translate(-12 -12.2)');
+      var hrt = document.createElementNS(NS, 'path');
+      hrt.setAttribute('d', HEART);
+      hrt.setAttribute('fill', TINTS[s.tint][0]);
+      hrt.setAttribute('stroke', 'rgba(70,8,36,.42)'); hrt.setAttribute('stroke-width', 1.1);
+      hrt.setAttribute('stroke-linejoin', 'round');
+      var sh = document.createElementNS(NS, 'ellipse');
+      sh.setAttribute('cx', 7.6); sh.setAttribute('cy', 8.4);
+      sh.setAttribute('rx', 1.7); sh.setAttribute('ry', 2.8);
+      sh.setAttribute('transform', 'rotate(-32 7.6 8.4)');
+      sh.setAttribute('fill', 'rgba(255,255,255,.45)');
+      g.appendChild(hrt); g.appendChild(sh);
+      notesG.appendChild(g);
+    }
+  }
+
+  /* ================= matnlar ================= */
+  function refreshUI() {
+    var left = TOTAL - state.idx;
+    count.textContent = state.idx + ' / ' + TOTAL;
+    if (state.idx === 0) {
+      hint.textContent = 'Bankaga bos — har safar bitta xatcha chiqadi';
+    } else if (left > 0) {
+      hint.textContent = 'Bankada yana ' + left + ' ta xatcha bor';
+    } else {
+      hint.textContent = 'Banka bo‘shadi, lekin sabablarim hech qachon tugamaydi.';
+    }
+    var done = left === 0;
+    doneActions.hidden = !done;
+    allSec.hidden = !done;
+    jar.classList.toggle('idle', !done && !reduce);
+    jar.setAttribute('aria-label', done ? 'Banka bo‘sh' : 'Bankadan xatcha olish');
+    drawNotes();
+  }
+  (function fillAll() {
+    for (var i = 0; i < TOTAL; i++) {
+      var li = document.createElement('li');
+      var sp = document.createElement('span');
+      sp.textContent = REASONS[i];
+      li.appendChild(sp);
+      allList.appendChild(li);
+    }
+  })();
+
+  /* ================= xatchani olish ================= */
+  var busy = false, cardOpen = false, lastFinal = false;
+
+  function puffHearts() {
+    if (reduce) return;
+    for (var i = 0; i < 5; i++) {
+      var el = document.createElement('span');
+      el.className = 'puff';
+      el.style.setProperty('--dx', rand(-70, 70).toFixed(0) + 'px');
+      el.style.animationDelay = (i * 0.09).toFixed(2) + 's';
+      el.innerHTML = '<svg viewBox="0 0 24 24"><path fill="' + pick(['#F27A9B', '#FFB3C6', '#F3CD82']) +
+        '" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+      el.addEventListener('animationend', function (e) { e.currentTarget.remove(); });
+      jarWrap.appendChild(el);
+    }
+  }
+  function showCard() {
+    var n = state.idx;                       /* nechanchi xatcha (0 dan) */
+    var slot = slots[TOTAL - n - 1];
+    var isFinal = n === TOTAL - 1;
+    lastFinal = isFinal;
+    note.style.setProperty('--paper', TINTS[slot.tint][1]);
+    note.style.setProperty('--rot', rand(-1.6, 1.6).toFixed(2) + 'deg');
+    note.classList.remove('out');
+    note.classList.toggle('final', isFinal);
+    noteNum.textContent = isFinal ? 'Va eng asosiysi' : (n + 1) + '-sabab';
+    noteText.textContent = REASONS[state.order[n]];
+    noteCount.textContent = (n + 1) + ' / ' + TOTAL;
+    nextBtn.textContent = isFinal ? 'Barchasini qayta o‘qish' : 'Keyingi xatcha';
+    backBtn.hidden = isFinal;
+
+    state.idx = n + 1;
+    saveState();
+    refreshUI();
+
+    veil.hidden = false; noteWrap.hidden = false;
+    /* animatsiyani qayta boshlash */
+    note.style.animation = 'none'; void note.offsetWidth; note.style.animation = '';
+    requestAnimationFrame(function () { veil.classList.add('on'); });
+    cardOpen = true;
+    setTimeout(function () { nextBtn.focus({ preventScroll: true }); }, reduce ? 0 : 500);
+    if (isFinal) celebrate();
+  }
+  function pull() {
+    if (busy || state.idx >= TOTAL) return;
+    busy = true;
+    startMusic();
+    jar.classList.remove('idle');
+    jar.classList.add('open', 'wiggle');
+    puffHearts();
+    setTimeout(showCard, reduce ? 0 : 360);
+    setTimeout(function () {
+      jar.classList.remove('open', 'wiggle');
+      busy = false;
+    }, reduce ? 0 : 900);
+  }
+  function closeCard(then) {
+    if (!cardOpen) { if (then) then(); return; }
+    cardOpen = false;
+    note.classList.add('out');
+    veil.classList.remove('on');
+    setTimeout(function () {
+      veil.hidden = true; noteWrap.hidden = true;
+      if (then) then(); else jar.focus({ preventScroll: true });
+    }, reduce ? 0 : 250);
+  }
+  function showAll() {
+    allSec.hidden = false;
+    allSec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  jar.addEventListener('click', function () {
+    if (state.idx >= TOTAL) { showAll(); return; }
+    pull();
+  });
+  nextBtn.addEventListener('click', function () {
+    if (lastFinal) { closeCard(showAll); return; }
+    closeCard(function () { busy = false; pull(); });
+  });
+  backBtn.addEventListener('click', function () { closeCard(); });
+  veil.addEventListener('click', function () { closeCard(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && cardOpen) closeCard();
+  });
+  $('#readAll').addEventListener('click', showAll);
+  $('#refill').addEventListener('click', function () {
+    state = { order: buildOrder(), idx: 0 };
+    saveState();
+    refreshUI();
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    jar.focus({ preventScroll: true });
+  });
+
+  /* ================= yulduzlar ================= */
+  var W = 0, H = 0, DPR = 1;
+  function size() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    [fx, starsCv].forEach(function (c) { c.width = W * DPR; c.height = H * DPR; });
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    sctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    sctx.clearRect(0, 0, W, H);
+    /* yumshoq chiroq dog'lari (bokeh) va mayda uchqunlar */
+    var glow = ['255,190,200', '255,214,170', '255,150,175'], i, x, y, r, c, gr;
+    var n = Math.round((W * H) / 13000);
+    for (i = 0; i < n; i++) {
+      x = Math.random() * W; y = Math.random() * H; r = rand(14, 58); c = glow[i % 3];
+      gr = sctx.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, 'rgba(' + c + ',' + rand(0.07, 0.17).toFixed(3) + ')');
+      gr.addColorStop(0.7, 'rgba(' + c + ',' + rand(0.03, 0.08).toFixed(3) + ')');
+      gr.addColorStop(1, 'rgba(' + c + ',0)');
+      sctx.fillStyle = gr;
+      sctx.beginPath(); sctx.arc(x, y, r, 0, Math.PI * 2); sctx.fill();
+    }
+    sctx.fillStyle = '#FFE9D6';
+    for (i = 0; i < n * 1.5; i++) {
+      sctx.globalAlpha = rand(0.2, 0.75);
+      sctx.beginPath();
+      sctx.arc(Math.random() * W, Math.random() * H, rand(0.4, 1.2), 0, Math.PI * 2);
+      sctx.fill();
+    }
+    sctx.globalAlpha = 1;
+  }
+  var resizeT;
+  window.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(size, 150); });
+  size();
+
+  /* ================= oxirgi xatcha uchun salyut ================= */
+  var FW = ['#F3CD82', '#F27A9B', '#FFF4EA', '#FFB3C6', '#FF8FA3', '#FFD9A0'];
+  var rockets = [], sparks = [], running = false, lastFrame = 0, launchUntil = 0, nextLaunch = 0;
+  function launch(x) {
+    if (x == null) x = W * rand(0.1, 0.9);
+    rockets.push({ x: x, y: H + 8, px: x, py: H + 8, tx: x + rand(-40, 40), ty: H * rand(0.1, 0.45), color: pick(FW) });
+  }
+  function explode(r) {
+    var scale = Math.max(0.75, Math.min(1.35, Math.min(W, H) / 620));
+    var n = Math.round(rand(60, 95)), second = Math.random() < 0.45 ? pick(FW) : r.color;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2, sp = rand(1.2, 4.6) * scale;
+      sparks.push({ x: r.x, y: r.y, px: r.x, py: r.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+        life: 1, decay: rand(0.011, 0.022), color: i % 3 === 0 ? second : r.color });
+    }
+    if (sparks.length > 900) sparks.splice(0, sparks.length - 900);
+  }
+  function frame(now) {
+    if (!running) return;
+    var dt = Math.min(2.5, (now - lastFrame) / 16.67) || 1;
+    lastFrame = now;
+    if (now < launchUntil && now > nextLaunch) { launch(); nextLaunch = now + rand(380, 950); }
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = 'rgba(0,0,0,' + Math.min(0.5, 0.2 * dt) + ')';
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round';
+    var i, r, s, k = 1 - Math.pow(1 - 0.075, dt), fr = Math.pow(0.975, dt);
+    for (i = rockets.length - 1; i >= 0; i--) {
+      r = rockets[i]; r.px = r.x; r.py = r.y;
+      r.x += (r.tx - r.x) * k; r.y += (r.ty - r.y) * k;
+      ctx.globalAlpha = 0.9; ctx.strokeStyle = r.color; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(r.px, r.py); ctx.lineTo(r.x, r.y); ctx.stroke();
+      if (Math.abs(r.ty - r.y) < 6) { explode(r); rockets.splice(i, 1); }
+    }
+    for (i = sparks.length - 1; i >= 0; i--) {
+      s = sparks[i]; s.px = s.x; s.py = s.y;
+      s.vx *= fr; s.vy = s.vy * fr + 0.045 * dt;
+      s.x += s.vx * dt; s.y += s.vy * dt; s.life -= s.decay * dt;
+      if (s.life <= 0) { sparks.splice(i, 1); continue; }
+      ctx.globalAlpha = Math.max(0, s.life); ctx.strokeStyle = s.color; ctx.lineWidth = 1.7;
+      ctx.beginPath(); ctx.moveTo(s.px, s.py); ctx.lineTo(s.x, s.y); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    if (now > launchUntil + 600 && !rockets.length && !sparks.length) {
+      running = false;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, W, H);
+      return;
+    }
+    requestAnimationFrame(frame);
+  }
+  function celebrate() {
+    if (reduce) return;
+    var now = performance.now();
+    launchUntil = now + 14000;
+    nextLaunch = now + 1400;
+    [0.2, 0.5, 0.8, 0.35, 0.65].forEach(function (p, i) {
+      setTimeout(function () { launch(W * p); }, 200 + i * 240);
+    });
+    if (!running) { running = true; lastFrame = now; requestAnimationFrame(frame); }
+  }
+
+  /* ================= musiqa (shu sahifa uchun yozilgan romantik kuy, Sol-major, 6/8) ================= */
+  var ac = null, master = null, bus = null, nextT = 0, step = 0, muted = false, silentEl = null;
+  var SIX = 0.34, VOLUME = 0.8;
+  /* Sahifa yoniga shu nomli fayl qo'yilsa, o'sha yangraydi; fayl bo'lmasa, pastdagi kuy chalinadi */
+  var MUSIC_FILE = 'musiqa.mp3', FILE_VOLUME = 0.9;
+  var fileEl = null, fileMode = false, synthOn = false;
+  var SEMI = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
+  function hz(n) {
+    var m = /^([A-G]#?)(\d)$/.exec(n);
+    return 440 * Math.pow(2, (SEMI[m[1]] + (parseInt(m[2], 10) + 1) * 12 - 69) / 12);
+  }
+  /* chap qo'l: har taktda 6 ta nota */
+  var ARP = [
+    ['G2', 'D3', 'G3', 'B3', 'G3', 'D3'],   ['F#2', 'D3', 'F#3', 'A3', 'F#3', 'D3'],
+    ['E2', 'B2', 'E3', 'G3', 'E3', 'B2'],   ['C3', 'G3', 'C4', 'E4', 'C4', 'G3'],
+    ['B2', 'G3', 'B3', 'D4', 'B3', 'G3'],   ['A2', 'E3', 'G3', 'C4', 'G3', 'E3'],
+    ['D3', 'A3', 'D4', 'F#4', 'D4', 'A3'],  ['D3', 'A3', 'C4', 'F#4', 'C4', 'A3'],
+    ['E2', 'B2', 'E3', 'G3', 'E3', 'B2'],   ['C3', 'G3', 'C4', 'E4', 'C4', 'G3'],
+    ['G2', 'D3', 'G3', 'B3', 'G3', 'D3'],   ['F#2', 'D3', 'F#3', 'A3', 'F#3', 'D3'],
+    ['E2', 'B2', 'E3', 'G3', 'E3', 'B2'],   ['C3', 'G3', 'C4', 'E4', 'C4', 'G3'],
+    ['D3', 'A3', 'D4', 'F#4', 'D4', 'A3'],  ['G2', 'D3', 'G3', 'B3', 'D4', 'B3']
+  ];
+  /* o'ng qo'l: [taktdagi o'rni, nota, davomiyligi] */
+  var MEL = [
+    [[0, 'B4', 2], [2, 'D5', 1], [3, 'G5', 3]],
+    [[0, 'F#5', 3], [3, 'E5', 1], [4, 'D5', 2]],
+    [[0, 'E5', 2], [2, 'G5', 1], [3, 'B4', 3]],
+    [[0, 'C5', 3], [3, 'E5', 3]],
+    [[0, 'D5', 2], [2, 'G5', 1], [3, 'B5', 3]],
+    [[0, 'A5', 3], [3, 'G5', 1], [4, 'E5', 2]],
+    [[0, 'F#5', 2], [2, 'E5', 1], [3, 'D5', 3]],
+    [[0, 'A4', 4], [4, 'B4', 1], [5, 'D5', 1]],
+    [[0, 'E5', 3], [3, 'B5', 3]],
+    [[0, 'G5', 2], [2, 'E5', 1], [3, 'C5', 3]],
+    [[0, 'D5', 3], [3, 'B4', 1], [4, 'D5', 2]],
+    [[0, 'A5', 3], [3, 'F#5', 3]],
+    [[0, 'G5', 2], [2, 'F#5', 1], [3, 'E5', 3]],
+    [[0, 'E5', 2], [2, 'D5', 1], [3, 'C5', 3]],
+    [[0, 'B4', 2], [2, 'A4', 1], [3, 'D5', 3]],
+    [[0, 'G5', 6]]
+  ];
+
+  function impulse(sec) {
+    var len = (ac.sampleRate * sec) | 0, b = ac.createBuffer(2, len, ac.sampleRate);
+    for (var c = 0; c < 2; c++) {
+      var d = b.getChannelData(c);
+      for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6);
+    }
+    return b;
+  }
+  function voice(freq, t, dur, vol, type) {
+    var o = ac.createOscillator(), g = ac.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(bus);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+  function bell(f, t, dur, vol) {
+    voice(f, t, dur, vol, 'sine');
+    voice(f * 2, t, dur * 0.45, vol * 0.2, 'sine');
+    voice(f * 3, t, 0.26, vol * 0.09, 'sine');
+  }
+  function playStep(s, t) {
+    var pos = s % 6, b = Math.floor(s / 6), arp, mel = null, loop = 0, i;
+    if (b < 2) {
+      arp = ARP[b === 0 ? 0 : 3];              /* ikki taktli kirish */
+    } else {
+      b -= 2; loop = Math.floor(b / 16); b %= 16;
+      arp = ARP[b]; mel = MEL[b];
+    }
+    var f = hz(arp[pos]);
+    if (pos === 0) voice(f, t, SIX * 6.5, 0.2, 'triangle');
+    else voice(f, t, SIX * 3, pos === 3 ? 0.085 : 0.07, 'triangle');
+    if (!mel) return;
+    for (i = 0; i < mel.length; i++) {
+      if (mel[i][0] !== pos) continue;
+      var m = hz(mel[i][1]), d = SIX * mel[i][2];
+      bell(m, t, d + 1.2, pos === 0 ? 0.16 : 0.14);
+      if (loop % 2 === 1) bell(m * 2, t, d + 0.8, 0.04);   /* har ikkinchi aylanishda oktava yuqoridan mayin aks */
+    }
+  }
+  function schedule() {
+    if (!ac || ac.state !== 'running') return;
+    if (nextT < ac.currentTime) nextT = ac.currentTime + 0.08;
+    while (nextT < ac.currentTime + 0.35) { playStep(step, nextT); nextT += SIX; step++; }
+  }
+  /* iPhone ovozsiz rejimda ham musiqa eshitilishi uchun jimjit audio */
+  function startSilentLoop() {
+    try {
+      var sr8 = 8000, n = 1600, buf = new Uint8Array(44 + n), dv = new DataView(buf.buffer);
+      var w = function (o, str) { for (var i = 0; i < str.length; i++) buf[o + i] = str.charCodeAt(i); };
+      w(0, 'RIFF'); dv.setUint32(4, 36 + n, true); w(8, 'WAVEfmt ');
+      dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+      dv.setUint32(24, sr8, true); dv.setUint32(28, sr8, true);
+      dv.setUint16(32, 1, true); dv.setUint16(34, 8, true);
+      w(36, 'data'); dv.setUint32(40, n, true);
+      for (var i = 44; i < buf.length; i++) buf[i] = 128;
+      var bin = '';
+      for (var j = 0; j < buf.length; j++) bin += String.fromCharCode(buf[j]);
+      silentEl = new Audio('data:audio/wav;base64,' + btoa(bin));
+      silentEl.loop = true;
+      silentEl.setAttribute('playsinline', '');
+      var p = silentEl.play();
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) { silentEl = null; }
+  }
+  var musicStarted = false;
+  function safePlay(el) {
+    try { var p = el.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+  }
+  function beginSynth() {
+    if (synthOn || !ac) return;
+    synthOn = true;
+    document.body.setAttribute('data-music', 'synth');
+    if (muted) return;
+    ac.resume();
+    master.gain.linearRampToValueAtTime(VOLUME, ac.currentTime + 2);
+    nextT = ac.currentTime + 0.4;
+  }
+  function tryFile() {
+    try {
+      var el = new Audio(MUSIC_FILE), failed = false;
+      el.loop = true;
+      el.preload = 'auto';
+      el.volume = FILE_VOLUME;
+      el.setAttribute('playsinline', '');
+      var fail = function () {
+        if (failed || fileMode) return;
+        failed = true; fileEl = null;
+        beginSynth();
+      };
+      el.addEventListener('error', fail);
+      el.addEventListener('playing', function () {
+        if (failed || fileMode) return;
+        fileMode = true;
+        document.body.setAttribute('data-music', 'file');
+        if (silentEl) silentEl.pause();
+        if (ac) ac.suspend();
+        if (muted) el.pause();
+      });
+      fileEl = el;
+      var p = el.play();
+      if (p && p.catch) p.catch(fail);
+    } catch (e) { fileEl = null; beginSynth(); }
+  }
+  function startMusic() {
+    if (musicStarted) return;
+    musicStarted = true;
+    document.body.classList.add('started');
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) {
+        startSilentLoop();
+        ac = new AC();
+        master = ac.createGain(); master.gain.value = 0.0001;
+        bus = ac.createGain();
+        var conv = ac.createConvolver(); conv.buffer = impulse(2.6);
+        var wet = ac.createGain(); wet.gain.value = 0.32;
+        var comp = ac.createDynamicsCompressor();
+        bus.connect(master); bus.connect(conv); conv.connect(wet); wet.connect(master);
+        master.connect(comp); comp.connect(ac.destination);
+        if (ac.state === 'suspended') ac.resume();
+        setInterval(function () { if (synthOn) schedule(); }, 90);
+      }
+    } catch (e) { ac = null; }
+    tryFile();
+  }
+  function setMuted(m) {
+    muted = m;
+    musicBtn.setAttribute('aria-pressed', String(!m));
+    musicLabel.textContent = m ? 'Musiqani yoqish' : 'Musiqani o‘chirish';
+    if (fileMode && fileEl) {
+      if (m) fileEl.pause(); else safePlay(fileEl);
+      return;
+    }
+    if (!ac || !synthOn) return;
+    if (m) {
+      master.gain.cancelScheduledValues(ac.currentTime);
+      master.gain.setTargetAtTime(0.0001, ac.currentTime, 0.06);
+      setTimeout(function () { if (muted && ac) ac.suspend(); }, 300);
+      if (silentEl) silentEl.pause();
+    } else {
+      ac.resume();
+      master.gain.cancelScheduledValues(ac.currentTime);
+      master.gain.setTargetAtTime(VOLUME, ac.currentTime, 0.25);
+      if (silentEl) safePlay(silentEl);
+    }
+  }
+  musicBtn.addEventListener('click', function () { setMuted(!muted); });
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && running) { lastFrame = performance.now(); }
+    if (fileMode && fileEl) {
+      if (document.hidden) fileEl.pause(); else if (!muted) safePlay(fileEl);
+      return;
+    }
+    if (!ac || !synthOn) return;
+    if (document.hidden) {
+      ac.suspend();
+      if (silentEl) silentEl.pause();
+    } else if (!muted) {
+      ac.resume();
+      if (silentEl) safePlay(silentEl);
+    }
+  });
+
+  /* ================= gulbarglar ================= */
+  (function () {
+    if (reduce) return;
+    var layer = document.getElementById('petals'), cols = ['#F27A9B', '#FFB3C6', '#E0457B', '#FFD9E0'];
+    var n = window.innerWidth < 600 ? 12 : 18;
+    for (var i = 0; i < n; i++) {
+      var el = document.createElement('span'), w = rand(12, 22), dur = rand(10, 18);
+      el.className = 'petal';
+      el.style.left = rand(-5, 100).toFixed(1) + '%';
+      el.style.setProperty('--drift', rand(-60, 90).toFixed(0) + 'px');
+      el.style.animationDuration = dur.toFixed(1) + 's';
+      el.style.animationDelay = (-rand(0, dur)).toFixed(1) + 's';
+      el.style.opacity = rand(0.45, 0.85).toFixed(2);
+      el.innerHTML = '<svg viewBox="0 0 20 24" width="' + w.toFixed(0) + '" style="animation-duration:' + rand(2.2, 4).toFixed(1) +
+        's"><path fill="' + pick(cols) + '" d="M10 1 C17 6 19 14 10 23 C1 14 3 6 10 1Z"/></svg>';
+      layer.appendChild(el);
+    }
+  })();
+
+  refreshUI();
+})();
+</script>
+</body>
+</html>
